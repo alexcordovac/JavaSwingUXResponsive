@@ -11,6 +11,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
+import jiconfont.swing.IconFontSwing;
+import recursos.iconos.GoogleMaterialDesignIcons;
 import utiles.Constantes;
 import utiles.TextPrompt;
 
@@ -28,6 +30,11 @@ public class FormTrabajador extends javax.swing.JPanel {
     public FormTrabajador(int IDFORM) {
         this.IDFORM = IDFORM;
         initComponents();
+        pintarIconos();
+    }
+    
+    private void pintarIconos(){
+        jLabel1.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.FACE, 70, Constantes.COLOR_LIGERO));
     }
 
     /**
@@ -59,10 +66,13 @@ public class FormTrabajador extends javax.swing.JPanel {
         jTextField1 = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jProgressBar1 = new javax.swing.JProgressBar();
+        jLabel1 = new javax.swing.JLabel();
 
         setBackground(Constantes.COLOR_BEIGE);
+        setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 30, 0, 30));
         setPreferredSize(new java.awt.Dimension(216, 300));
-        setLayout(new java.awt.GridBagLayout());
+        setLayout(new java.awt.CardLayout());
 
         jPanel1.setPreferredSize(new java.awt.Dimension(250, 350));
         jPanel1.setLayout(new java.awt.GridBagLayout());
@@ -87,6 +97,8 @@ public class FormTrabajador extends javax.swing.JPanel {
         jTextField2.setToolTipText("");
         jTextField2.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(255, 255, 255)));
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -101,15 +113,24 @@ public class FormTrabajador extends javax.swing.JPanel {
                         .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(6, 6, 6))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addContainerGap(21, Short.MAX_VALUE))))
+                        .addComponent(jTextField1)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jTextField2)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jProgressBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 173, Short.MAX_VALUE)
+                        .addContainerGap())))
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(56, 56, 56)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -117,7 +138,9 @@ public class FormTrabajador extends javax.swing.JPanel {
                 .addComponent(jLabel3)
                 .addGap(4, 4, 4)
                 .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
+                .addComponent(jProgressBar1, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
         );
 
         TextPrompt phNombreTrabajador = new TextPrompt("Nombre del trabajador "+IDFORM, jTextField1);
@@ -132,15 +155,17 @@ public class FormTrabajador extends javax.swing.JPanel {
         jPanel1.setBackground(Constantes.COLOR_PRIMARIO);
         jPanel1.setOpaque(false);
 
-        add(jPanel1, new java.awt.GridBagConstraints());
+        add(jPanel1, "card2");
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JProgressBar jProgressBar1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables

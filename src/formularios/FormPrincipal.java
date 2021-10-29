@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import controladores.ControladorMenu;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -13,11 +14,8 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import jiconfont.swing.IconFontSwing;
 import recursos.iconos.GoogleMaterialDesignIcons;
 import utiles.Constantes;
@@ -53,7 +51,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         lblMostrarOcultarMenu.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.NAVIGATE_BEFORE, 50, Constantes.COLOR_LIGERO));
         
         //Menu items
-        jLabel2.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.ASSIGNMENT_IND, 30, Constantes.COLOR_PRIMARIO));
+        //jLabel2.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.ASSIGNMENT_IND, 30, Constantes.COLOR_PRIMARIO));
+        //jLabel3.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.EQUALIZER, 30, Constantes.COLOR_PRIMARIO));
     }
 
     private void configVentana() {
@@ -116,6 +115,16 @@ public class FormPrincipal extends javax.swing.JFrame {
         }
     }
 
+    /*GETTER y SETTERS para el ControladorMenu*/
+
+    public JPanel getPanelMenus() {
+        return panelMenus;
+    }
+
+    public JPanel getPanelCuerpo() {
+        return panelCuerpo;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -136,13 +145,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         lblMostrarOcultarMenu = new javax.swing.JLabel();
-        jPanel3 = new javax.swing.JPanel();
-        jPanel5 = new javax.swing.JPanel();
-        jPanel6 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jPanel8 = new javax.swing.JPanel();
+        panelMenus = new javax.swing.JPanel();
+        panelCuerpo = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -245,71 +249,16 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         jPanel2.add(jPanel1, java.awt.BorderLayout.LINE_START);
 
-        jPanel3.setBackground(Constantes.COLOR_LIGERO);
-
-        jPanel5.setBackground(Constantes.COLOR_LIGERO);
-        jPanel5.setPreferredSize(new java.awt.Dimension(200, 50));
-        jPanel5.setLayout(new java.awt.BorderLayout());
-
-        jPanel6.setBackground(Constantes.COLOR_LIGERO);
-        jPanel6.setPreferredSize(new java.awt.Dimension(50, 50));
-        jPanel6.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jPanel6MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jPanel6MouseExited(evt);
-            }
-        });
-        jPanel6.setLayout(new java.awt.CardLayout());
-
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jPanel6.add(jLabel2, "card2");
-
-        jPanel5.add(jPanel6, java.awt.BorderLayout.LINE_START);
-
-        jPanel7.setBackground(Constantes.COLOR_LIGERO);
-        jPanel7.setLayout(new java.awt.CardLayout());
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 13)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(226, 106, 44));
-        jLabel1.setText("Asignar trabajo");
-        jLabel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        jLabel1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jLabel1MouseClicked(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                jLabel1MouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                jLabel1MouseExited(evt);
-            }
-        });
-        jPanel7.add(jLabel1, "card2");
-
-        jPanel5.add(jPanel7, java.awt.BorderLayout.CENTER);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 400, Short.MAX_VALUE))
-        );
-
-        jPanel2.add(jPanel3, java.awt.BorderLayout.CENTER);
+        panelMenus.setName("jpanel3");
+        panelMenus.setBackground(Constantes.COLOR_LIGERO);
+        panelMenus.setLayout(new javax.swing.BoxLayout(panelMenus, javax.swing.BoxLayout.Y_AXIS));
+        jPanel2.add(panelMenus, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_START);
 
-        jPanel8.setBackground(Constantes.COLOR_BEIGE);
-        jPanel8.setLayout(new java.awt.GridLayout(1, 1));
-        getContentPane().add(jPanel8, java.awt.BorderLayout.CENTER);
+        panelCuerpo.setBackground(Constantes.COLOR_BEIGE);
+        panelCuerpo.setLayout(new java.awt.GridLayout(1, 1));
+        getContentPane().add(panelCuerpo, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -333,39 +282,13 @@ public class FormPrincipal extends javax.swing.JFrame {
     private void lblMostrarOcultarMenuMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMostrarOcultarMenuMouseExited
         jPanel4.setBackground(Constantes.COLOR_PRIMARIO);
     }//GEN-LAST:event_lblMostrarOcultarMenuMouseExited
-
+    
     boolean menuShowed = true;
     private void lblMostrarOcultarMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMostrarOcultarMenuMouseClicked
-        mostrarOcultarMenu(jPanel2);
+        mostrarOcultarMenu(this.jPanel2);
     }//GEN-LAST:event_lblMostrarOcultarMenuMouseClicked
 
-    private void jPanel6MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseEntered
-       jPanel6.setBackground(new Color(255, 222,165));
-       jPanel7.setBackground(new Color(255, 222,165));
-    }//GEN-LAST:event_jPanel6MouseEntered
-
-    private void jPanel6MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel6MouseExited
-       jPanel6.setBackground(Constantes.COLOR_LIGERO);
-       jPanel7.setBackground(Constantes.COLOR_LIGERO);
-    }//GEN-LAST:event_jPanel6MouseExited
-
-    private void jLabel1MouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseEntered
-       jPanel6.setBackground(new Color(255, 222,165));
-       jPanel7.setBackground(new Color(255, 222,165));
-    }//GEN-LAST:event_jLabel1MouseEntered
-
-    private void jLabel1MouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseExited
-       jPanel6.setBackground(Constantes.COLOR_LIGERO);
-       jPanel7.setBackground(Constantes.COLOR_LIGERO);
-    }//GEN-LAST:event_jLabel1MouseExited
-
-    private void jLabel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel1MouseClicked
-        jPanel8.removeAll();
-        jPanel8.add(new PanelTrabajadorLayout() , "card1");
-        jPanel8.revalidate();
-        jPanel8.repaint();
-    }//GEN-LAST:event_jLabel1MouseClicked
-
+   
     /**
      * @param args the command line arguments
      */
@@ -382,36 +305,27 @@ public class FormPrincipal extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FormPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FormPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FormPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(FormPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
+        
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new FormPrincipal().setVisible(true);
+                FormPrincipal vistaPrincipal = new FormPrincipal();
+                vistaPrincipal.setVisible(true);
+                ControladorMenu ctrlMenu = new ControladorMenu(vistaPrincipal);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JLabel lblCorazonIcon;
     private javax.swing.JLabel lblIconSalir;
     private javax.swing.JLabel lblMostrarOcultarMenu;
@@ -419,6 +333,8 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblSistemaIco;
     private javax.swing.JLabel lblSistemaNombre;
     private javax.swing.JLabel lblUsuarioIcon;
+    private javax.swing.JPanel panelCuerpo;
+    private javax.swing.JPanel panelMenus;
     private javax.swing.JPanel panelToolBar;
     // End of variables declaration//GEN-END:variables
 }

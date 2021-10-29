@@ -8,8 +8,8 @@ package alertas;
 import formularios.JPanelArrastrable;
 import java.util.TimerTask;
 import java.util.Timer;
-import Conexion.Conexion;
-import Conexion.ConexionProps;
+import conexion.Conexion;
+import conexion.ConexionProps;
 import utiles.Constantes;
 
 public class SolicitarDBProps extends javax.swing.JDialog {
