@@ -20,6 +20,10 @@ public class Constantes {
     public static final Color COLOR_LIGERO = new Color(255, 208, 127);
     public static final Color COLOR_BEIGE = new Color(255, 255, 204);
     
+    public static final Color COLOR_SUCCESS = new Color(34, 120, 43);
+    public static final Color COLOR_OK = Color.BLUE;
+    public static final Color COLOR_ERROR = Color.RED;
+    
     /*Empresa*/
     public static final String EMPRESA = "Maids at home";
 }

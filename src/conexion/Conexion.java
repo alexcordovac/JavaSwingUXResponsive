@@ -5,7 +5,6 @@
  */
 package conexion;
 
-import conexion.ConexionProps;
 import alertas.SolicitarDBProps;
 import java.io.File;
 import java.io.FileInputStream;
@@ -26,8 +25,8 @@ public class Conexion {
 
     public static Connection con;
     public static ConexionProps propiedades;
-    private String dirActual = System.getProperty("user.dir");
-    private String nombreArchivo = "dbprops.dat";
+    private final String dirActual = System.getProperty("user.dir");
+    private final String nombreArchivo = "dbprops.dat";
     SolicitarDBProps soli = new SolicitarDBProps(null, true);
 
     public Conexion() {
@@ -42,7 +41,6 @@ public class Conexion {
             con = DriverManager.getConnection(url);
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(null, "No se pudo conectar a la base de datos");
-            System.err.print(e.getMessage());
         }
         return con;
     }
@@ -98,7 +96,7 @@ public class Conexion {
             file.close();
 
         } catch (IOException ex) {
-            System.out.println("IOException is caughten deserealizarProps: "+ex.getMessage());
+            System.out.println("IOException en deserealizarProps: "+ex.getMessage());
         } catch (ClassNotFoundException ex) {
             System.out.println("ClassNotFoundException en deserealizarProps: "+ex.getMessage());
         }

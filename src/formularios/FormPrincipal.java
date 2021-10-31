@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import conexion.Conexion;
 import controladores.ControladorMenu;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -34,6 +35,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         initComponents();
         pintarIconos();
         setLocationRelativeTo(null);
+        
     }
 
     /*Método para color iconos en la ventana principal*/
@@ -54,7 +56,8 @@ public class FormPrincipal extends javax.swing.JFrame {
         //jLabel2.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.ASSIGNMENT_IND, 30, Constantes.COLOR_PRIMARIO));
         //jLabel3.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.EQUALIZER, 30, Constantes.COLOR_PRIMARIO));
     }
-
+    
+    /*Ajustes a la ventana principal*/
     private void configVentana() {
         //Ajustar al 90% de la pantalla
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -76,7 +79,8 @@ public class FormPrincipal extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    /*Función para mostrar o ocultar el menú deslizable de la izquierda*/
     public void mostrarOcultarMenu(JPanel menushowhide) {
         if (menuShowed == true) {
             int width = menushowhide.getWidth();
@@ -257,7 +261,7 @@ public class FormPrincipal extends javax.swing.JFrame {
         getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_START);
 
         panelCuerpo.setBackground(Constantes.COLOR_BEIGE);
-        panelCuerpo.setLayout(new java.awt.GridLayout(1, 1));
+        panelCuerpo.setLayout(new java.awt.CardLayout());
         getContentPane().add(panelCuerpo, java.awt.BorderLayout.CENTER);
 
         pack();
@@ -317,6 +321,9 @@ public class FormPrincipal extends javax.swing.JFrame {
             public void run() {
                 FormPrincipal vistaPrincipal = new FormPrincipal();
                 vistaPrincipal.setVisible(true);
+                Conexion a = new Conexion();
+                a.inicializarProps();
+                
                 ControladorMenu ctrlMenu = new ControladorMenu(vistaPrincipal);
             }
         });

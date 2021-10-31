@@ -59,7 +59,4 @@ public class ConexionProps implements Serializable{
     public void setDb(String db) {
         this.db = db;
     }
-    
-    
-    
 }

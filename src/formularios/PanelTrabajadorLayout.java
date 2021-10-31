@@ -5,12 +5,25 @@
  */
 package formularios;
 
+import controladores.ControladorGeneral;
+import controladores.ControladorTrabajador;
 import java.awt.Color;
-import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 import jiconfont.swing.IconFontSwing;
 import recursos.iconos.GoogleMaterialDesignIcons;
 import utiles.Constantes;
-import utiles.TextPrompt;
 
 /**
  *
@@ -18,29 +31,91 @@ import utiles.TextPrompt;
  */
 public class PanelTrabajadorLayout extends javax.swing.JPanel {
 
+    private TemporizadorTrabajador temporizadorTrabajador;
+    public static List<FormTrabajador> listaFormTrabajadores;
+    public static boolean activarBotones = false;
+
+    //Efecto del botón registrar que cambie de color, para destacarlo que ya se puede presionar
+    public static Timer destacarBoton;
+
+    //Fecha
+    public static Date fecha;
+    private String formato;
+    SimpleDateFormat sdf;
+
+    //Variable para sabaer si los empleados ya han sido guardados
+    public static boolean yaFueronGuardados = false;
+    
+    
+    //Controlador general
+    ControladorGeneral ctrlGeneral;
     /**
      * Creates new form NewJPanel
      */
     public PanelTrabajadorLayout() {
+        iniDestacarBotonRegistrarTimer();
+        initFecha();
         initComponents();
         pintarIconos();
         pintarFormTrabajador();
+
+        //Temporizador icono y tiempo en la vista
+        temporizadorTrabajador = new TemporizadorTrabajador(lblContadorTiempo, lblMensaje, listaFormTrabajadores);
         
-        //Placeholder de la fecha
-        TextPrompt phFecha = new TextPrompt("yyyy/mm/dd", jTextField1);
-        phFecha.changeAlpha(0.75f);
-        phFecha.changeStyle(Font.ITALIC);
+        ctrlGeneral = new ControladorGeneral();
     }
-    
-    private void pintarIconos(){
+
+    /*Inicializar el timer que funciona para destacar el botón registrar,
+        cuando los trabajdores han terminado su jornada ya se puede registrar la información*/
+    private void iniDestacarBotonRegistrarTimer() {
+        PanelTrabajadorLayout.destacarBoton = new Timer(1000, new ActionListener() {
+            boolean var = false;
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                var = !var;
+                if (var) {
+                    panelRegistrar.setBackground(Constantes.COLOR_MEDIO);
+
+                } else {
+                    panelRegistrar.setBackground(Constantes.COLOR_PRIMARIO);
+                }
+            }
+        });
+    }
+
+    private void pintarIconos() {
+        
+        //Icono bandera
         jLabel1.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.FLAG, 30, Color.WHITE));
+        //Icono guardar
         jLabel3.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SAVE, 30, Color.WHITE));
+        //Icono reloj
+        lblRelojIcono.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SCHEDULE, 20, new Color(64, 63, 62)));
+        //Icono detener
+        btnDetenerIcono.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BLOCK, 20, new Color(64, 63, 62)));
+        btnDetenerIcono.setRolloverIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.BLOCK, 23, new Color(64, 63, 62)));
     }
-    
-    private void pintarFormTrabajador(){
+
+    private void pintarFormTrabajador() {
+        listaFormTrabajadores = new ArrayList<>();
         for (int i = 1; i <= 3; i++) {
-            panelTrabajadores.add(new FormTrabajador(i));
+            FormTrabajador formTrabajador = new FormTrabajador(i);
+            listaFormTrabajadores.add(formTrabajador);
+            panelTrabajadores.add(formTrabajador);
         }
+    }
+
+    /*Variables utilizadas por el DateChooser, código personalizado dentro
+        del código de netbeans*/
+    private void initFecha() {
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            fecha = sdf.parse(sdf.format(new Date()));
+        } catch (ParseException ex) {
+            Logger.getLogger(PanelTrabajadorLayout.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        formato = sdf.toString();
     }
 
     /**
@@ -54,8 +129,11 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
 
         jPanel4 = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
+        jDateChooser1 = new com.toedter.calendar.JDateChooser(fecha, formato );
+        jLabel7 = new javax.swing.JLabel();
+        txtJornada = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
         jPanel1 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         panelIniciarJornada = new javax.swing.JPanel();
@@ -64,6 +142,10 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
         panelRegistrar = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        lblContadorTiempo = new javax.swing.JLabel();
+        lblMensaje = new javax.swing.JLabel();
+        lblRelojIcono = new javax.swing.JLabel();
+        btnDetenerIcono = new javax.swing.JButton();
         panelTrabajadores = new javax.swing.JPanel();
 
         setPreferredSize(new java.awt.Dimension(650, 450));
@@ -74,15 +156,28 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
         jLabel5.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel5.setText("Fecha:");
 
-        jTextField1.setBackground(Constantes.COLOR_BEIGE);
-        jTextField1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextField1.setToolTipText("");
-        jTextField1.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
-
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
         jLabel6.setForeground(Constantes.COLOR_LIGERO);
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel6.setText("Asignar trabajo");
+
+        jDateChooser1.setOpaque(false);
+
+        jLabel7.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        jLabel7.setText("Jornada máxima:");
+
+        txtJornada.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtJornada.setText("8");
+        txtJornada.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtJornadaActionPerformed(evt);
+            }
+        });
+
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "segundo(s)", "minuto(s)", "hora(s)" }));
+        jComboBox1.setSelectedIndex(1);
+        jComboBox1.setBorder(null);
+        jComboBox1.setPreferredSize(new java.awt.Dimension(77, 24));
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -93,8 +188,14 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
                 .addGap(38, 38, 38)
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(420, Short.MAX_VALUE))
+                .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txtJornada, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(79, Short.MAX_VALUE))
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -102,10 +203,14 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
                 .addGap(27, 27, 27)
                 .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(19, 19, 19))
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtJornada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jDateChooser1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(16, 16, 16))
         );
 
         add(jPanel4, java.awt.BorderLayout.PAGE_START);
@@ -120,6 +225,9 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
         panelIniciarJornada.setBackground(Constantes.COLOR_PRIMARIO);
         panelIniciarJornada.setPreferredSize(new java.awt.Dimension(150, 51));
         panelIniciarJornada.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelIniciarJornadaMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 panelIniciarJornadaMouseEntered(evt);
             }
@@ -140,6 +248,9 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
         panelRegistrar.setBackground(Constantes.COLOR_PRIMARIO);
         panelRegistrar.setPreferredSize(new java.awt.Dimension(150, 51));
         panelRegistrar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                panelRegistrarMouseClicked(evt);
+            }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 panelRegistrarMouseEntered(evt);
             }
@@ -157,25 +268,65 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
         jLabel4.setText("Registrar");
         panelRegistrar.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 14, 90, 20));
 
+        lblContadorTiempo.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        lblContadorTiempo.setText("00m 00s");
+
+        lblMensaje.setToolTipText("");
+
+        lblRelojIcono.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        lblRelojIcono.setToolTipText("");
+
+        btnDetenerIcono.setToolTipText("Detener jornada");
+        btnDetenerIcono.setBorder(null);
+        btnDetenerIcono.setContentAreaFilled(false);
+        btnDetenerIcono.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnDetenerIcono.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDetenerIconoMouseClicked(evt);
+            }
+        });
+        btnDetenerIcono.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDetenerIconoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(28, Short.MAX_VALUE)
-                .addComponent(panelIniciarJornada, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(panelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(panelIniciarJornada, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(18, 18, 18)
+                            .addComponent(panelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(jPanel3Layout.createSequentialGroup()
+                            .addComponent(lblRelojIcono, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(lblContadorTiempo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(btnDetenerIcono, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addGap(23, 23, 23))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(25, 25, 25)
+                .addGap(21, 21, 21)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblContadorTiempo, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE)
+                    .addComponent(btnDetenerIcono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(lblRelojIcono, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(panelRegistrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(panelIniciarJornada, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jPanel1.add(jPanel3, new java.awt.GridBagConstraints());
@@ -202,22 +353,116 @@ public class PanelTrabajadorLayout extends javax.swing.JPanel {
 
     private void panelRegistrarMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelRegistrarMouseExited
         panelRegistrar.setBackground(Constantes.COLOR_PRIMARIO);
+
     }//GEN-LAST:event_panelRegistrarMouseExited
+
+    private void panelIniciarJornadaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelIniciarJornadaMouseClicked
+
+        //LocalDate date = jDateChooser1.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        if (TemporizadorTrabajador.timer.isRunning()) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Jornada en curso!", Constantes.COLOR_OK);
+            return;
+        } else if (!activarBotones) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Ingrese todos los campos!", Constantes.COLOR_ERROR);
+            return;
+        } else if (txtJornada.getText().isEmpty()) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Jornada vacía!", Constantes.COLOR_ERROR);
+            return;
+        } else if (Integer.valueOf(txtJornada.getText()) <= 5) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Jornada menor o igual que 5 " + jComboBox1.getSelectedItem() + "!", Constantes.COLOR_ERROR);
+            return;
+        }
+        //Configurar variables del temporizador, para que se ajusten al tiempo ingresado por el usuario
+        TemporizadorTrabajador.jornada = Integer.valueOf(txtJornada.getText());
+        TemporizadorTrabajador.multiplicador = (jComboBox1.getSelectedIndex() == 0)
+                ? TemporizadorTrabajador.multiplicadorSegundos
+                : (jComboBox1.getSelectedIndex() == 1)
+                ? TemporizadorTrabajador.multiplicadorMinutos
+                : TemporizadorTrabajador.multiplicadorHora;
+        TemporizadorTrabajador.tiempoFinal = TemporizadorTrabajador.jornada * TemporizadorTrabajador.multiplicador;
+        TemporizadorTrabajador.timerLoop = (TemporizadorTrabajador.multiplicador == TemporizadorTrabajador.multiplicadorHora) ? TemporizadorTrabajador.multiplicadorMinutos
+                : (TemporizadorTrabajador.multiplicador == TemporizadorTrabajador.multiplicadorMinutos) ? TemporizadorTrabajador.multiplicadorSegundos : TemporizadorTrabajador.multiplicadorSegundos;
+
+        new Thread(() -> {
+            temporizadorTrabajador.empezarTemporizador();
+        }).start();
+    }//GEN-LAST:event_panelIniciarJornadaMouseClicked
+
+    private void panelRegistrarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelRegistrarMouseClicked
+        if (TemporizadorTrabajador.temporizador == 0) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Los trabajadores no han iniciado!", Constantes.COLOR_ERROR);
+            return;
+        } else if (TemporizadorTrabajador.timer.isRunning()) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Espere que los trabajadores terminen!", Constantes.COLOR_ERROR);
+            return;
+        }
+
+        //Buscamos si alguno no ha sido guardado
+        yaFueronGuardados = true;
+        for (FormTrabajador formTrabajador : listaFormTrabajadores) {
+            if (!formTrabajador.getEmpleadoGuardado()) {
+                yaFueronGuardados = false;
+                break;
+            }
+        }
+        if (yaFueronGuardados) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Los registros ya fueron guardados!", Constantes.COLOR_ERROR);
+            return;
+        }
+
+        fecha = jDateChooser1.getDate();
+        listaFormTrabajadores.forEach(formTrabajador -> {
+            new Thread(() -> {
+                formTrabajador.guardarEmpleado();
+            }).start();
+        });
+        if (destacarBoton.isRunning()) {
+            destacarBoton.stop();
+        }
+    }//GEN-LAST:event_panelRegistrarMouseClicked
+
+    private void txtJornadaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtJornadaActionPerformed
+        
+        
+    }//GEN-LAST:event_txtJornadaActionPerformed
+
+    private void btnDetenerIconoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDetenerIconoActionPerformed
+        try{
+            TemporizadorTrabajador.timer.stop();
+            listaFormTrabajadores.forEach(formTrabajador -> {
+                formTrabajador.timer.stop();
+            });
+        }catch(Exception e){
+            
+        }
+    }//GEN-LAST:event_btnDetenerIconoActionPerformed
+
+    private void btnDetenerIconoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDetenerIconoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnDetenerIconoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnDetenerIcono;
+    private javax.swing.JComboBox<String> jComboBox1;
+    private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
-    private javax.swing.JTextField jTextField1;
+    private javax.swing.JLabel lblContadorTiempo;
+    private javax.swing.JLabel lblMensaje;
+    private javax.swing.JLabel lblRelojIcono;
     private javax.swing.JPanel panelIniciarJornada;
     private javax.swing.JPanel panelRegistrar;
     private javax.swing.JPanel panelTrabajadores;
+    private javax.swing.JTextField txtJornada;
     // End of variables declaration//GEN-END:variables
+
 }

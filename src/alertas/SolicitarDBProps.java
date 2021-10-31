@@ -120,7 +120,7 @@ public class SolicitarDBProps extends javax.swing.JDialog {
 
         jLabel6.setText("Base de datos:");
 
-        inputDB.setText("la_estancia");
+        inputDB.setText("BD_EA");
         inputDB.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(0, 0, 0)));
         inputDB.setPreferredSize(new java.awt.Dimension(72, 20));
 
