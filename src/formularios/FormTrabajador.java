@@ -6,11 +6,12 @@
 package formularios;
 
 import controladores.ControladorGeneral;
+import controladores.ControladorMenu;
 import controladores.ControladorTrabajador;
-import static formularios.TemporizadorTrabajador.multiplicador;
-import static formularios.TemporizadorTrabajador.multiplicadorHora;
-import static formularios.TemporizadorTrabajador.multiplicadorMinutos;
-import static formularios.TemporizadorTrabajador.multiplicadorSegundos;
+import static formularios.TrabajadorTemporizador.multiplicador;
+import static formularios.TrabajadorTemporizador.multiplicadorHora;
+import static formularios.TrabajadorTemporizador.multiplicadorMinutos;
+import static formularios.TrabajadorTemporizador.multiplicadorSegundos;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,6 +20,7 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import javax.swing.JLabel;
@@ -52,7 +54,7 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
 
     //Observable
     TrabajadorObservable trabajadorObservable;
-    Observadores observadores;
+    TrabajadorObserver observadores;
     
     //Variable para identificar cuando este formulario ya guardó el empleado creado
     private boolean empleadoGuardado = false;
@@ -71,7 +73,7 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
         pintarIconos();
         iniDocumentListener();
         trabajadorObservable = new TrabajadorObservable();
-        observadores = new Observadores(this);
+        observadores = new TrabajadorObserver(this);
         ctrlGeneral = new ControladorGeneral();
     }
 
@@ -121,7 +123,7 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
 
         //Numero random y calculo del tiempo final
         random = numeroAleatorio();
-        this.tiempoFinal = ((TemporizadorTrabajador.jornada - 3) * TemporizadorTrabajador.multiplicador) + (random * TemporizadorTrabajador.multiplicador);
+        this.tiempoFinal = ((TrabajadorTemporizador.jornada - 3) * TrabajadorTemporizador.multiplicador) + (random * TrabajadorTemporizador.multiplicador);
 
         //Actualizar la barra de progreso usando el Event Dispatch Thread
         SwingUtilities.invokeLater(new Runnable() {
@@ -129,7 +131,7 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
             public void run() {
                 iniBarraProgreso();
                 lblRelojIcono.setIcon(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.SCHEDULE, 20, Color.WHITE));
-                lblTiempoFinal.setText(TemporizadorTrabajador.format(tiempoFinal));
+                lblTiempoFinal.setText(TrabajadorTemporizador.format(tiempoFinal));
             }
         });
 
@@ -165,9 +167,8 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
 
                 if (temporizador >= tiempoFinal) {
                     trabajadorObservable.getTrabajoFinalizadoObservable().setTrabajoFinalizado(true);
-                    lblMensaje.setForeground(Constantes.COLOR_SUCCESS);
+                    lblMensaje.setForeground(Constantes.COLOR_LIGERO);
                     lblMensaje.setText("Finalicé mi jornada");
-                    crearEmpleado();
                     timer.stop();
                 }
             }
@@ -200,11 +201,11 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
 
     //Función para inicializar un empleado 
     public void crearEmpleado() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");;
+        DateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");;
         String fecha = sdf.format(PanelTrabajadorLayout.fecha);
         String nombre_trabajador = getTxtNombreTrabajador().getText();
         String nombre_cliente = getTxtNombreCliente().getText();
-        int tiempo_trabajado =  (TemporizadorTrabajador.jornada -3) + random ;
+        int tiempo_trabajado =  (TrabajadorTemporizador.jornada -3) + random ;
         int comision_obtenida = (random == 0) ? 200 : 0;
         int descuentos_realizados = (random == 0) ? 0
                 : (random > 0) ? 50 * random : (100 * random) * -1;
@@ -213,20 +214,22 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
         empleado = new Empleado(fecha, nombre_trabajador, nombre_cliente, tiempo_trabajado, comision_obtenida, descuentos_realizados, sueldo_total);
     }
     
-    //Función para guardar un emplead
+    //Función para guardar un empleado
     public void guardarEmpleado() {
+        crearEmpleado();
         try {
             ControladorTrabajador ctrlEmpleado = new ControladorTrabajador();
             int resultado = ctrlEmpleado.guardarEmpleado(empleado);
             if(resultado >0 ){
                 empleadoGuardado = true;
-                ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Guardado correctamente", Constantes.COLOR_SUCCESS);
+                Thread.sleep(1000);
+                ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Guardado correctamente", Constantes.COLOR_LIGERO);
             }
             else{
-                ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Error guardando :(", Constantes.COLOR_ERROR);
+                ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Error guardando :(", Constantes.COLOR_LIGERO);
             }
-        } catch (Exception e) {
-            ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Error guardando :(", Constantes.COLOR_ERROR);
+        } catch (InterruptedException e) {
+            ctrlGeneral.notificarMensaje(lblMensaje, 10000, "Error guardando :(", Constantes.COLOR_LIGERO);
         }
 
     }
@@ -324,26 +327,28 @@ public class FormTrabajador extends javax.swing.JPanel implements Runnable {
         jPanel1.setPreferredSize(new java.awt.Dimension(250, 350));
         jPanel1.setLayout(new java.awt.GridBagLayout());
 
-        jPanel2.setBackground(new java.awt.Color(226, 106, 44));
+        jPanel2.setBackground(Constantes.COLOR_PRIMARIO);
 
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setText("Nombre del trabajador "+IDFORM+":");
         jLabel2.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        txtNombreTrabajador.setBackground(Constantes.COLOR_PRIMARIO);
+        txtNombreTrabajador.setBackground(new java.awt.Color(255, 255, 255, 0));
         txtNombreTrabajador.setForeground(new java.awt.Color(255, 255, 255));
         txtNombreTrabajador.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(255, 255, 255)));
+        txtNombreTrabajador.setOpaque(false);
 
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setText("Nombre del cliente "+IDFORM+":");
         jLabel3.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
 
-        txtNombreCliente.setBackground(Constantes.COLOR_PRIMARIO);
+        txtNombreCliente.setBackground(new java.awt.Color(255, 255, 255, 0));
         txtNombreCliente.setForeground(new java.awt.Color(255, 255, 255));
         txtNombreCliente.setBorder(javax.swing.BorderFactory.createMatteBorder(0, 0, 1, 0, new java.awt.Color(255, 255, 255)));
 
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
+        lblMensaje.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         lblMensaje.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
 
         lblTiempoFinal.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N

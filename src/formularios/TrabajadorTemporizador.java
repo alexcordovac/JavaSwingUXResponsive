@@ -18,7 +18,7 @@ import utiles.Constantes;
  *
  * @author Alex
  */
-public class TemporizadorTrabajador {
+public class TrabajadorTemporizador {
 
     //Constantes
     /*Se utilizan para definir qué unidad se está manejando,
@@ -59,8 +59,11 @@ public class TemporizadorTrabajador {
     //Controlador general
     ControladorGeneral ctrlGeneral;
     
+    //Variable para saber si se terminaron todas las jorndas
+    public static boolean jornadasTerminadas = false;
+    
     /*Constructor*/
-    public TemporizadorTrabajador(JLabel label, JLabel lblMensaje, List<FormTrabajador> lista) {
+    public TrabajadorTemporizador(JLabel label, JLabel lblMensaje, List<FormTrabajador> lista) {
         this.label = label;
         this.lblMensaje = lblMensaje;
         this.listaFormTrabajadores = lista;
@@ -118,10 +121,23 @@ public class TemporizadorTrabajador {
             ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Jornada en curso!", Constantes.COLOR_OK);
             return;
         }
+        
+        //Las jornadas inicilialmente no están terminadas
+        jornadasTerminadas = false;
+        
+        //Tiempo inicial en milisegundos
         tiempoInicial = System.currentTimeMillis();
+        
+        //Que el temporizador empiece desde 0
         temporizador = 0;
+        
+        //Inicializamos el temporizador
         iniTimer();
+        
+        //Bloqueamos los jtextfields y el mensaje(jlabel)  si tiene algo lo ponemos en ""
         resetFormularioTrabajador();
+        
+        //Indicamos que el temporizador ha iniciado
         ctrlGeneral.notificarMensaje(lblMensaje, 5000, "¡Temporizador inicializado!", Constantes.COLOR_SUCCESS);
         
         //Empezamos hilos del form trabajador

@@ -6,7 +6,6 @@
 
 package formularios;
 
-import java.awt.Color;
 import javax.swing.Icon;
 import utiles.Constantes;
 

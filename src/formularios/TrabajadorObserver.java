@@ -14,13 +14,13 @@ import utiles.Constantes;
  *
  * @author Alex
  */
-public class Observadores {
+public class TrabajadorObserver {
 
     FormTrabajador formTrabajador;
     ControladorGeneral ctrlGeneral;
     
-    public Observadores(FormTrabajador formTrabajador) {
-        //Agregar Observadores a los Observados
+    public TrabajadorObserver(FormTrabajador formTrabajador) {
+        //Agregar TrabajadorObserver a los Observados
         this.formTrabajador = formTrabajador;
         this.formTrabajador.getTrabajadorObservable().getCamposObservables().addObserver(new ObservadorCamposLlenos());
         this.formTrabajador.getTrabajadorObservable().getTrabajoFinalizadoObservable().addObserver(new ObservadorTrabajadorFinalizado());
@@ -57,9 +57,18 @@ public class Observadores {
                 for (FormTrabajador formTrabajador : PanelTrabajadorLayout.listaFormTrabajadores) {
                    formTrabajador.habilitarCampos();
                 }
-                TemporizadorTrabajador.timer.stop();
+                
+                //Detenemos el temporizador
+                TrabajadorTemporizador.timer.stop();
+                
+                //Destacamos que ya se puede guardar los registros 
                 PanelTrabajadorLayout.destacarBoton.start();
-                ctrlGeneral.notificarMensaje(TemporizadorTrabajador.lblMensaje, 5000, "¡Trabajos finalizados!", Constantes.COLOR_SUCCESS);
+                
+                //Indicamos que ya fueron terminadas todas las jornadas
+                TrabajadorTemporizador.jornadasTerminadas = true;
+                
+                //Mandamos un mensaje
+                ctrlGeneral.notificarMensaje(TrabajadorTemporizador.lblMensaje, 5000, "¡Trabajos finalizados!", Constantes.COLOR_SUCCESS);
             }
         }
     }

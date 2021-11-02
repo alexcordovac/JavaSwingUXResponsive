@@ -21,7 +21,7 @@ import recursos.iconos.GoogleMaterialDesignIcons;
 /**
  * Controla la vista del cuerpo de la pantalla principal.
  * 1-Primera implementacion guardando las vistas en un hashmap, revalidando y repintando el cuerpo.
- * 2-Usando carlayout en el cuerpo de la pantalla principal.
+ * 2-(actual) Usando cardlayout en el cuerpo de la pantalla principal.
  *   Para eliminar esta opcion, borrar las lineas con el comentario test
  *   Opcionalmente cambiar el layout del panel cuerpo a grid layout con 1 columna
  *   Descomentar aquí en el mouselistener donde se llama el metodo controlarVista
@@ -30,13 +30,15 @@ import recursos.iconos.GoogleMaterialDesignIcons;
  */
 public class ControladorMenu {
 
-    private FormPrincipal vista;
+    private final FormPrincipal vista;
     private HashMap<MenuItem, JPanel> menusVistas;
     private MenuItem menuSeleccionado;
+    public static ControladorRegistros ctrlRegistros;
 
     public ControladorMenu(FormPrincipal vista) {
         this.vista = vista;
         iniMenus();
+        
     }
 
     /*Función para crear y pintar los menus en el panelMenus de la vista principal*/
@@ -46,20 +48,27 @@ public class ControladorMenu {
         //Menu items
         MenuItem asignarTrabajo = new MenuItem(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.ASSIGNMENT_IND, 30, Constantes.COLOR_PRIMARIO), "Asignar trabajo");
         MenuItem recordsObtenidos = new MenuItem(IconFontSwing.buildIcon(GoogleMaterialDesignIcons.EQUALIZER, 30, Constantes.COLOR_PRIMARIO), "Records obtenidos");
+        
+        //Vistas
         PanelTrabajadorLayout panelTrabajadorLayout = new PanelTrabajadorLayout();
         FormRecordObtenidos formRecordObtenidos = new FormRecordObtenidos();
         
-        //Los guardamos en el hashmap con su respectivo formulario
-        menusVistas.put(asignarTrabajo, panelTrabajadorLayout);
-        menusVistas.put(recordsObtenidos , formRecordObtenidos);
+        //Controladores
+        ctrlRegistros = new ControladorRegistros(formRecordObtenidos);
+        ctrlRegistros.pintarTabla();
         
-        //Los pintamos en la vista
+        //Los guardamos en el hashmap con su respectivo formulario
+        //menusVistas.put(asignarTrabajo, panelTrabajadorLayout);
+       //menusVistas.put(recordsObtenidos , formRecordObtenidos);
+        
+        //Pintamos la lista de menus
         pintarMenuItems(asignarTrabajo, recordsObtenidos);
         
         //test
         vista.getPanelCuerpo().add(panelTrabajadorLayout, asignarTrabajo.getName());
         vista.getPanelCuerpo().add(formRecordObtenidos, recordsObtenidos.getName());
         
+        //test
         //Pinto de color este menu (clickedao) porque es el que se muestra por default al iniciar
         asignarTrabajo.setColor();
         menuSeleccionado = asignarTrabajo;

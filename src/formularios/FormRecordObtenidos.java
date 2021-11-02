@@ -7,22 +7,24 @@ package formularios;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
+import modelos.Empleado;
 import utiles.Constantes;
 
 /**
  *
  * @author Alex
  */
-public class FormRecordObtenidos extends javax.swing.JPanel  {
+public class FormRecordObtenidos extends javax.swing.JPanel {
 
-    
     private DefaultTableModel modeloTabla;
+
     /**
      * Creates new form FormRecordObtenidos
      */
@@ -37,36 +39,38 @@ public class FormRecordObtenidos extends javax.swing.JPanel  {
         tablaRecords.setOpaque(true);
         tablaRecords.setFillsViewportHeight(true);
         tablaRecords.setBackground(Color.WHITE);
-        
+
         //Lineas horizontales
         tablaRecords.setShowVerticalLines(false);
         tablaRecords.setShowHorizontalLines(true);
         tablaRecords.setGridColor(Constantes.COLOR_BEIGE);
-        
+
         //Pintar encabezado de la tabla y centrar el texto
-        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer(){};
+        DefaultTableCellRenderer headerRenderer = new DefaultTableCellRenderer() {
+        };
         headerRenderer.setHorizontalAlignment(JLabel.CENTER);
         headerRenderer.setBackground(Constantes.COLOR_MEDIO);
-        
+
         for (int i = 0; i < tablaRecords.getModel().getColumnCount(); i++) {
             tablaRecords.getColumnModel().getColumn(i).setHeaderRenderer(headerRenderer);
         }
         tablaRecords.getTableHeader().setPreferredSize(new Dimension(100, 40));
-        
-        //Pintar encabezado de la tabla y centrar el texto
-        DefaultTableCellRenderer cellRender = new DefaultTableCellRenderer(){};
+
+        //Centrar las celdas
+        DefaultTableCellRenderer cellRender = new DefaultTableCellRenderer() {
+        };
         cellRender.setHorizontalAlignment(JLabel.CENTER);
-        
+
         for (int i = 0; i < tablaRecords.getModel().getColumnCount(); i++) {
             tablaRecords.getColumnModel().getColumn(i).setCellRenderer(cellRender);
         }
-        
+
         //Esquina superior derecha del jscrollpane, sin este código, hay un cuadro color gris
         JPanel panelEsquina = new JPanel();
         panelEsquina.setBackground(Constantes.COLOR_MEDIO);
         jScrollPane2.setCorner(JScrollPane.UPPER_RIGHT_CORNER, panelEsquina);
-   }
-    
+    }
+
     /*Método para crear el modelo de la tabla*/
     private void iniTabla() {
         modeloTabla = new DefaultTableModel(new String[]{"Fecha", "Trabajador",
@@ -85,24 +89,24 @@ public class FormRecordObtenidos extends javax.swing.JPanel  {
 //        tablaRecords.getColumnModel().getColumn(0).setMinWidth(50);
 //        tablaRecords.getColumnModel().getColumn(3).setMinWidth(60);
 //        tablaRecords.getColumnModel().getColumn(4).setMinWidth(10);
-
         //Altura de las filas
         tablaRecords.setRowHeight(30);
 
         //Ajustar contenido
         tablaRecords.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
-        
+
+    }
+
+    public void cargarRegistrosTabla(List<Empleado> lista) {
         modeloTabla.setRowCount(0);
-        for (int i = 0; i < 30; i++) {
-            Object[] registro = {"Fecha "+i, "Trabajador "+i,
-            "Cliente "+i, "Tiempo trabajado "+i, "Comisión "+i, "Descuento "+i, "Sueldo obtenido "+i};
+
+        for (Empleado empleado : lista) {
+            Object[] registro = {empleado.getFecha(), empleado.getNombre_trabajador(), empleado.getNombre_cliente(),
+                empleado.getTiempo_trabajado(), empleado.getComision_obtenida(), empleado.getDescuentos_realizados(),
+                empleado.getSueldo_total()};
             modeloTabla.addRow(registro);
         }
-        
     }
-    
-    
-
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -150,26 +154,13 @@ public class FormRecordObtenidos extends javax.swing.JPanel  {
         add(jPanel1, java.awt.BorderLayout.PAGE_START);
 
         jPanel2.setBackground(Constantes.COLOR_BEIGE);
-        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 30, 10, 30));
+        jPanel2.setBorder(javax.swing.BorderFactory.createEmptyBorder(0, 30, 20, 30));
         jPanel2.setLayout(new java.awt.BorderLayout());
 
         jScrollPane2.setBackground(new java.awt.Color(255, 153, 51));
         jScrollPane2.setBorder(null);
 
         tablaRecords.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        tablaRecords.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {"", "", "", ""},
-                {null, null, "", null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         tablaRecords.setToolTipText(null);
         tablaRecords.setGridColor(new java.awt.Color(0, 0, 0));
         tablaRecords.setRowHeight(30);

@@ -6,7 +6,6 @@
 package controladores;
 
 import dao.EmpleadoDao;
-import java.util.List;
 import modelos.Empleado;
 
 /**
@@ -26,8 +25,6 @@ public class ControladorTrabajador {
         return resultado;
     }
     
-    public List<Empleado> obtenerListaEmpleados(){
-        return empleadoDao.obtenerEmpleados();
-    }
+    
     
 }

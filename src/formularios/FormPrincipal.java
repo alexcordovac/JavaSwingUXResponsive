@@ -5,6 +5,7 @@
  */
 package formularios;
 
+import utiles.JPanelArrastrable;
 import conexion.Conexion;
 import controladores.ControladorMenu;
 import java.awt.Color;
@@ -15,7 +16,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.geom.RoundRectangle2D;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import jiconfont.swing.IconFontSwing;
 import recursos.iconos.GoogleMaterialDesignIcons;
@@ -34,10 +34,9 @@ public class FormPrincipal extends javax.swing.JFrame {
         configVentana();
         initComponents();
         pintarIconos();
-        setLocationRelativeTo(null);
         
     }
-
+    
     /*Método para color iconos en la ventana principal*/
     private void pintarIconos() {
         IconFontSwing.register(GoogleMaterialDesignIcons.getIconFont());
@@ -122,7 +121,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     /*GETTER y SETTERS para el ControladorMenu*/
 
     public JPanel getPanelMenus() {
-        return panelMenus;
+        return panelMenuExpandible;
     }
 
     public JPanel getPanelCuerpo() {
@@ -145,11 +144,11 @@ public class FormPrincipal extends javax.swing.JFrame {
         lblCorazonIcon = new javax.swing.JLabel();
         lblUsuarioIcon = new javax.swing.JLabel();
         lblNotificacionIcon = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        panelMenuContenedor = new javax.swing.JPanel();
+        panelMenu = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         lblMostrarOcultarMenu = new javax.swing.JLabel();
-        panelMenus = new javax.swing.JPanel();
+        panelMenuExpandible = new javax.swing.JPanel();
         panelCuerpo = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -206,13 +205,13 @@ public class FormPrincipal extends javax.swing.JFrame {
 
         getContentPane().add(panelToolBar, java.awt.BorderLayout.PAGE_START);
 
-        jPanel2.setName(""); // NOI18N
-        jPanel2.setPreferredSize(new java.awt.Dimension(250, 450));
-        jPanel2.setLayout(new java.awt.BorderLayout());
+        panelMenuContenedor.setName(""); // NOI18N
+        panelMenuContenedor.setPreferredSize(new java.awt.Dimension(250, 450));
+        panelMenuContenedor.setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setBackground(Constantes.COLOR_PRIMARIO);
-        jPanel1.setPreferredSize(new java.awt.Dimension(50, 450));
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        panelMenu.setBackground(Constantes.COLOR_PRIMARIO);
+        panelMenu.setPreferredSize(new java.awt.Dimension(50, 450));
+        panelMenu.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel4.setBackground(Constantes.COLOR_PRIMARIO);
         jPanel4.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -235,7 +234,7 @@ public class FormPrincipal extends javax.swing.JFrame {
             .addGap(0, 10, Short.MAX_VALUE)
         );
 
-        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 10));
+        panelMenu.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 50, 10));
 
         lblMostrarOcultarMenu.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMostrarOcultarMenu.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -249,16 +248,16 @@ public class FormPrincipal extends javax.swing.JFrame {
                 lblMostrarOcultarMenuMouseExited(evt);
             }
         });
-        jPanel1.add(lblMostrarOcultarMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 50, 40));
+        panelMenu.add(lblMostrarOcultarMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 10, 50, 40));
 
-        jPanel2.add(jPanel1, java.awt.BorderLayout.LINE_START);
+        panelMenuContenedor.add(panelMenu, java.awt.BorderLayout.LINE_START);
 
-        panelMenus.setName("jpanel3");
-        panelMenus.setBackground(Constantes.COLOR_LIGERO);
-        panelMenus.setLayout(new javax.swing.BoxLayout(panelMenus, javax.swing.BoxLayout.Y_AXIS));
-        jPanel2.add(panelMenus, java.awt.BorderLayout.CENTER);
+        panelMenuExpandible.setName("jpanel3");
+        panelMenuExpandible.setBackground(Constantes.COLOR_LIGERO);
+        panelMenuExpandible.setLayout(new javax.swing.BoxLayout(panelMenuExpandible, javax.swing.BoxLayout.Y_AXIS));
+        panelMenuContenedor.add(panelMenuExpandible, java.awt.BorderLayout.CENTER);
 
-        getContentPane().add(jPanel2, java.awt.BorderLayout.LINE_START);
+        getContentPane().add(panelMenuContenedor, java.awt.BorderLayout.LINE_START);
 
         panelCuerpo.setBackground(Constantes.COLOR_BEIGE);
         panelCuerpo.setLayout(new java.awt.CardLayout());
@@ -289,7 +288,7 @@ public class FormPrincipal extends javax.swing.JFrame {
     
     boolean menuShowed = true;
     private void lblMostrarOcultarMenuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblMostrarOcultarMenuMouseClicked
-        mostrarOcultarMenu(this.jPanel2);
+        mostrarOcultarMenu(this.panelMenuContenedor);
     }//GEN-LAST:event_lblMostrarOcultarMenuMouseClicked
 
    
@@ -313,25 +312,25 @@ public class FormPrincipal extends javax.swing.JFrame {
             java.util.logging.Logger.getLogger(FormPrincipal.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-        
         //</editor-fold>
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
                 FormPrincipal vistaPrincipal = new FormPrincipal();
+                vistaPrincipal.setLocationRelativeTo(null);
                 vistaPrincipal.setVisible(true);
-                Conexion a = new Conexion();
-                a.inicializarProps();
                 
-                ControladorMenu ctrlMenu = new ControladorMenu(vistaPrincipal);
+                new Thread( () -> {
+                    Conexion a = new Conexion();
+                    a.inicializarProps();
+                    ControladorMenu ctrlMenu = new ControladorMenu(vistaPrincipal);
+                
+                }).start();
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JLabel lblCorazonIcon;
     private javax.swing.JLabel lblIconSalir;
@@ -341,7 +340,9 @@ public class FormPrincipal extends javax.swing.JFrame {
     private javax.swing.JLabel lblSistemaNombre;
     private javax.swing.JLabel lblUsuarioIcon;
     private javax.swing.JPanel panelCuerpo;
-    private javax.swing.JPanel panelMenus;
+    private javax.swing.JPanel panelMenu;
+    private javax.swing.JPanel panelMenuContenedor;
+    private javax.swing.JPanel panelMenuExpandible;
     private javax.swing.JPanel panelToolBar;
     // End of variables declaration//GEN-END:variables
 }
